@@ -1,0 +1,111 @@
+html, body {
+    margin: 0;
+}
+
+@font-face {
+    font-family: "folkard";
+    src: url("../folkard.woff2") format("woff2");
+}
+
+@font-face {
+    font-family: "robot";
+    src: url("../roboto.woff2") format("woff2");
+}
+
+@font-face {
+    font-family: "papyrus";
+    src: url("../papyrus.woff2") format("woff2");
+}
+
+body {
+    background-color: #192a56;
+}
+
+.main-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    background-color: #273c75;
+    width: 50%;
+    text-align: center;
+    align-self: center;
+    margin: auto;
+    padding: 10px;
+}
+
+.containerEmpty {
+    margin: auto;
+}
+
+p, h1, a {
+    color: #f5f6fa;
+}
+
+h1 {
+    font-size: 4rem;
+    font-family: "folkard";
+}
+
+.footer {
+    font-size: 0.8rem;
+}
+
+p.quote {
+    font-size: 1.7rem;
+}
+
+p {
+    font-family: "papyrus";
+}
+
+button {
+    color: #f5f6fa;
+    background-color: #192a56;
+    border: solid 1px #f5f6fa;
+    font-size: 2rem;
+    cursor: pointer;
+    padding: 5px;
+    font-family: "papyrus";
+    margin-top: 30px;
+}
+
+button:hover {
+    background-color: #273c75;
+}
+
+@media screen and (max-width : 859px) {
+    .container {
+        width: 50%;
+    }
+}
+
+@media screen and (max-width : 719px) {
+    .container {
+        width: 60%;
+    }
+}
+
+@media screen and (max-width : 619px) {
+    .container {
+        width: 70%;
+    }
+}
+
+@media screen and (max-width : 519px) {
+    .container {
+        width: 80%;
+    }
+}
+
+@media screen and (max-width : 419px) {
+    .container {
+        width: 90%;
+    }
+}
