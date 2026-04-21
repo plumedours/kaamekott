@@ -121,8 +121,8 @@ Projet non officiel autour de Kaamelott.
 
 ## 👤 Auteur
 
-Maxime Bory - Plumedours
-https://github.com/plumedours
+Maxime Bory - Plumedours  
+https://github.com/plumedours  
 https://plumedours.github.io/portfolio/
 
 ---
