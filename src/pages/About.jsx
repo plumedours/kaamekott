@@ -110,7 +110,7 @@ export default function AboutPage() {
             </p>
           </div>
 
-          <div className="grid gap-5 lg:grid-cols-2">
+          <div className="grid gap-5 lg:grid-cols-3">
             <ExternalLinkCard
               title="Portfolio"
               href="https://plumedours.github.io/portfolio/"
@@ -123,6 +123,13 @@ export default function AboutPage() {
               href="https://github.com/plumedours"
               icon={CodeBracketIcon}
               description="Le code, les expérimentations, et probablement quelques trucs bancals. Mais assumés."
+            />
+
+            <ExternalLinkCard
+              title="Signaler / Contribuer"
+              href="https://forms.gle/iLDJtXWebEf4ZVDm6"
+              icon={UserCircleIcon}
+              description="Si t’as repéré une connerie ou que t’as mieux à proposer, c’est ici. On trie, on vérifie… et on essaye de garder un minimum de tenue."
             />
           </div>
         </div>

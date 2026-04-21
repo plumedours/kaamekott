@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
   SparklesIcon,
@@ -7,12 +7,15 @@ import {
   BookOpenIcon,
   MagnifyingGlassIcon,
   PhotoIcon,
+  ArrowPathIcon,
 } from "@heroicons/react/24/outline";
 import QuoteCard from "../components/QuoteCard";
+import GifCard from "../components/GifCard";
 import ScrollToTopButton from "../components/ScrollToTopButton";
 import StatusView from "../components/StatusView";
 import { getRandomQuote } from "../lib/quotes";
 import { useQuotesData } from "../lib/useQuotesData";
+import { useGifsData } from "../lib/useGifsData";
 
 function StatCard({ icon: Icon, label, value }) {
   return (
@@ -51,7 +54,21 @@ function ShortcutCard({ icon: Icon, title, text, to }) {
 
 export default function HomePage() {
   const navigate = useNavigate();
-  const { quotes, characters, seasons, loading, error } = useQuotesData();
+
+  const {
+    quotes,
+    characters,
+    seasons,
+    loading: quotesLoading,
+    error: quotesError,
+  } = useQuotesData();
+
+  const { gifs, loading: gifsLoading, error: gifsError } = useGifsData();
+
+  const loading = quotesLoading || gifsLoading;
+  const error = quotesError || gifsError;
+
+  const [randomSeed, setRandomSeed] = useState(0);
 
   const featuredQuotes = useMemo(() => {
     const copy = [...quotes];
@@ -59,13 +76,30 @@ export default function HomePage() {
     return shuffled.slice(0, 6);
   }, [quotes]);
 
-  const randomQuote = useMemo(() => getRandomQuote(quotes), [quotes]);
+  const randomQuote = useMemo(() => {
+    if (!quotes.length) return null;
+
+    if (randomSeed === 0) {
+      return getRandomQuote(quotes);
+    }
+
+    return quotes[Math.floor(Math.random() * quotes.length)];
+  }, [quotes, randomSeed]);
+
+  const randomGif = useMemo(() => {
+    if (!gifs.length) return null;
+    return gifs[Math.floor(Math.random() * gifs.length)];
+  }, [gifs, randomSeed]);
+
+  const refreshRandom = () => {
+    setRandomSeed((prev) => prev + 1);
+  };
 
   if (loading) {
     return (
       <StatusView
         title="Chargement"
-        message="Les citations arrivent. Pas toutes en même temps, faut pas déconner."
+        message="Les citations et les GIF arrivent. Pas tous en même temps, faut pas pousser."
       />
     );
   }
@@ -211,36 +245,87 @@ export default function HomePage() {
           />
         </div>
 
-        {randomQuote ? (
+        {(randomQuote || randomGif) && (
           <div className="mt-12">
-            <div className="mb-5 flex items-center justify-between gap-4">
+            <div className="mb-5 flex flex-wrap items-center justify-between gap-4">
               <div>
                 <p className="text-sm font-semibold uppercase tracking-[0.2em] text-emerald-600">
-                  À découvrir
+                  Aléatoire
                 </p>
                 <h2 className="mt-2 text-2xl font-bold text-slate-900">
-                  Citation aléatoire
+                  Le destin décide à ta place
                 </h2>
+                <p className="mt-1 text-sm text-slate-500">
+                  Une citation et un GIF tirés au hasard. Comme une stratégie
+                  montée par Perceval, mais qui marche.
+                </p>
               </div>
+
+              <button
+                type="button"
+                onClick={refreshRandom}
+                className="inline-flex h-12 items-center justify-center gap-2 rounded-full border border-slate-200 bg-white px-5 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-emerald-300 hover:text-emerald-700"
+              >
+                <ArrowPathIcon className="h-5 w-5" />
+                Relancer l’aléatoire
+              </button>
             </div>
 
-            <QuoteCard
-              quote={randomQuote}
-              featured
-              onCharacterClick={() =>
-                navigate(`/character/${randomQuote.characterSlug}`)
-              }
-              onSeasonClick={() =>
-                navigate(`/season/${randomQuote.seasonSlug}`)
-              }
-              onEpisodeClick={() =>
-                navigate(
-                  `/season/${randomQuote.seasonSlug}/episode/${randomQuote.episodeSlug}/citations`,
-                )
-              }
-            />
+            <div className="grid gap-8 xl:grid-cols-2">
+              <div>
+                <div className="mb-4 flex items-center gap-3">
+                  <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-700">
+                    <ChatBubbleLeftRightIcon className="h-5 w-5" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold text-slate-900">
+                      Citation aléatoire
+                    </h3>
+                    <p className="text-sm text-slate-500">
+                      Pour tomber sur une pépite sans lever le petit doigt.
+                    </p>
+                  </div>
+                </div>
+
+                {randomQuote && (
+                  <QuoteCard
+                    quote={randomQuote}
+                    featured
+                    onCharacterClick={() =>
+                      navigate(`/character/${randomQuote.characterSlug}`)
+                    }
+                    onSeasonClick={() =>
+                      navigate(`/season/${randomQuote.seasonSlug}`)
+                    }
+                    onEpisodeClick={() =>
+                      navigate(
+                        `/season/${randomQuote.seasonSlug}/episode/${randomQuote.episodeSlug}/citations`,
+                      )
+                    }
+                  />
+                )}
+              </div>
+
+              <div>
+                <div className="mb-4 flex items-center gap-3">
+                  <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-700">
+                    <PhotoIcon className="h-5 w-5" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold text-slate-900">
+                      GIF aléatoire
+                    </h3>
+                    <p className="text-sm text-slate-500">
+                      Pour répondre dignement quand les mots ne suffisent plus.
+                    </p>
+                  </div>
+                </div>
+
+                {randomGif && <GifCard gif={randomGif} />}
+              </div>
+            </div>
           </div>
-        ) : null}
+        )}
 
         <div className="mt-12">
           <div className="mb-5 flex items-center justify-between gap-4">

@@ -106,6 +106,15 @@ export default function Footer() {
               >
                 Portfolio
               </a>
+
+              <a
+                href="https://forms.gle/iLDJtXWebEf4ZVDm6"
+                target="_blank"
+                rel="noreferrer"
+                className="transition hover:text-emerald-700"
+              >
+                Signaler / Contribuer
+              </a>
             </div>
           </div>
         </div>
